@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shader Project</title>
+    <!-- scripts imbutidos -->
+</head>
+<style>
+    body{
+        background-color: rgb(36, 36, 36);
+        padding: 0px;
+        margin: 0px;
+    }
+    div{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    canvas{
+        width: 512px;
+        height: 400px;
+    }
+</style>
+<body>
+    <div>
+        <canvas id ="canvas-shader"></canvas>
+    </div>
+</body>
+<script id="shader-vs" type="x-shader/x-vertex"> 
+    attribute vec4 position; 
+
+    void main(void) { 
+        gl_Position = position; 
+    } 
+</script>
+<script id="shader-fs" type="x-shader/x-fragment"> 
+    //precision highp float;
+    precision mediump float;
+    uniform vec2 uResolution;
+
+    void main(void) { 
+        vec2 uv =(gl_FragCoord.xy -0.5 *uResolution.xy)/min(uResolution.x, uResolution.y);
+        float w =2.0*3.141592;
+        float cube =max(max(uv.x, uv.y), 1.0);
+        float vertical =sin(cos(3.0*w*uv.x) +uv.y*w*2.0 +0.4);
+        float horizontal =sin(uv.x*w);
+        float prof =0.0;
+        vec4 col =vec4(0.0,0.0,0.0,1.0);
+        
+
+        for (int i = 0; i < 20; i++){
+            prof +=0.1;
+            vertical =sin(cos(3.0*w*uv.x +prof) -prof+uv.y*w*2.0 +0.4);
+            ///horizontal +=0.2;
+            col +=vec4(0.0, horizontal+vertical, 0.0, 0.01);
+        }
+
+        gl_FragColor = vec4(max(uv.x,uv.y),0.0,0.0,1.0); 
+        // vermelho 
+    } 
+</script>
+<script>
+    // WebGL setup
+    const canvas = document.getElementById('canvas-shader');
+    const gl = canvas.getContext('webgl');
+
+    function getShader (gl, id){ 
+        const script = document.getElementById(id); 
+        //const source = script.text; 
+        let shader ={}; 
+        
+        if (script.type === "x-shader/x-fragment"){ 
+            shader.shader = gl.createShader(gl.FRAGMENT_SHADER); 
+        } 
+        else if (script.type === "x-shader/x-vertex"){ 
+            shader.shader = gl.createShader(gl.VERTEX_SHADER); 
+        } 
+
+        shader.source =document.getElementById(id).textContent;
+
+        gl.shaderSource(shader.shader, shader.source); 
+        gl.compileShader(shader.shader); 
+        
+        if (!gl.getShaderParameter(shader.shader, gl.COMPILE_STATUS)){ 
+            alert("Erro no shader: " + gl.getShaderInfoLog(shader.shader)); 
+            return null; 
+        } 
+
+        return shader; 
+    }
+
+    const vertShader = getShader(gl, 'shader-vs');
+    const fragShader = getShader(gl, 'shader-fs');
+    const program = gl.createProgram();
+
+    gl.attachShader(program, vertShader.shader);
+    gl.attachShader(program, fragShader.shader);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const position = gl.getAttribLocation(program, "position");
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1, -1, 1, -1, -1, 1,
+        -1, 1, 1, -1, 1, 1
+    ]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+    const u_resolution = gl.getUniformLocation(program, "uResolution");
+    
+    gl.uniform2f(u_resolution, canvas.width, canvas.height);
+    
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+</script>
+</html>

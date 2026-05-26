@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shader Project</title>
+    <!-- glsl via variaveis  -->
+</head>
+<style>
+    html,body{
+        padding: 0px;
+        margin: 0px;
+        height: 100%;
+    }
+    body{
+        background-color: rgb(36, 36, 36);
+        padding: 0px;
+        margin: 0px;
+    }
+    div {
+        color: white;
+        font-family: Verdana;
+        cursor: default;
+    }
+    h3{
+        text-align: center;
+        margin: 3px;
+    }
+    #principal.conteiner{
+        display: flex;
+        flex-direction: row;
+        height: inherit;
+        align-items: stretch;
+    }
+    #principal .item{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #menu{
+        padding-top: 10px;
+        padding-left: 10px;
+        width: 210px;
+        /* height: 100%; */
+        overflow-y: overlay;
+        overflow-x: hidden;
+
+        background-color: rgb(39, 39, 39);
+        /* border-right: 2px solid rgb(46, 124, 46); */
+        /* border-radius: 0 10px 10px 0; */
+    }
+    #menu div.topic{
+        padding: 5px;
+        background-color: rgb(35,35,35);
+        border-top: 2px solid rgb(69, 102, 89);
+        border-radius: 10px 10px 0 0;
+    }
+    #menu header{
+        font-size: small;
+        color: rgb(115, 218, 160);
+        cursor:pointer;
+    }
+    #menu button{
+        background-color: rgb(0, 61, 61);
+        color: rgb(167, 194, 218);
+        margin-bottom: 5px;
+        cursor:pointer;
+    }
+
+    #code{
+        width: -webkit-fill-available;
+    }
+
+    div#result{
+        width: 500px;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border: 2px solid rgb(110, 110, 110);
+        border-radius: 10px 10px 0 0;
+    }
+
+    #canvas-glsl{
+        background-color: rgb(27, 27, 27);
+        width: 480px;
+        height: 360px;
+    }
+
+    /* Blocos: */
+    div#workspace{ 
+        width: -webkit-fill-available;
+        height: -webkit-fill-available;
+        background-color: rgb(0, 27, 77);
+
+    }
+
+    div.node{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        left: 300px; top: 400px;
+        overflow: hidden;
+        border: 2px solid rgb(83, 83, 83);
+        border-radius: 10px;
+    }
+    div.node header{
+        /* pointer-events:none; */
+        user-select: none;
+        
+        padding: 4px;
+        width: -webkit-fill-available;
+        border-bottom: 1px solid rgb(75,75,75);
+        /* border-radius: 5px 5px 0 0; */
+        background-color: rgb(40, 40, 40);
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+    }
+    div.node .body{
+        display: flex;
+        flex-direction: row;
+    }
+    div.node .body div{
+        position: fixed;
+        display: flex;
+        height: 100px;
+        flex-direction: column;
+        justify-content: center;
+    }
+    div.node .body canvas{
+        width: 100px; 
+        height: 100px;
+        background-color: rgb(47, 47, 47);
+    }
+    
+    div.node nav{
+        padding: 2px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        background-color: rgb(0,60,80);
+        border: 2px solid rgb(0,80,100);
+        font-size: 12px;
+        
+    }
+
+    .hide{display: none;}
+    .seek{display: block;}
+
+    .caixa {
+        overflow: hidden;              /* Necessário para esconder conteúdo */
+        max-height: 0;                  /* Começa fechada */
+        opacity: 0;                     /* Invisível */
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+        background: lightblue;
+        padding: 0 10px;
+    }
+
+    .caixa.ativa {
+        max-height: 200px;              /* Altura máxima quando aberta */
+        opacity: 1;                     /* Visível */
+        padding: 10px;
+    }
+
+    /* 
+    body {
+        display: flex;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+        width: 250px;
+        background: #2c3e50;
+        color: white;
+        padding: 15px;
+        }
+
+        .topic {
+        margin-bottom: 20px;
+        }
+
+        .buttons {
+        display: flex;          organiza em row
+        flex-wrap: wrap;        quebra linha se não couber
+        gap: 10px;
+        }
+
+        button {
+        flex: 1;                ocupa espaço proporcional
+        padding: 10px;
+        background: #3498db;
+        border: none;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        }
+
+        button:hover {
+        background: #2980b9;
+        }
+
+        .content {
+        flex: 1;
+        padding: 20px;
+        }
+
+        .tab-content {
+        display: none;
+        }
+    
+    */
+</style>
+<body>
+    <div id ="principal" class ="conteiner">
+        <div id ="menu" class ="item">
+            <!-- <button onclick="createNode('Smooth')">smooth</button> -->
+            <!-- <button onclick="createNode('Smoothstep')">smoothstep</button> -->
+            <h3>Operações</h3>
+            <div class="topic">
+                <header onclick="toogleContent('op-bas')"><span>&#9660;</span> Básicas</header>
+                <div id ="op-bas" class="buttons seek">
+                    <button onclick="showContent('soma')">+</button>
+                    <button onclick="showContent('subtracao')">-</button>
+                    <button onclick="showContent('multiplicacao')">*</button>
+                    <button onclick="showContent('divisao')">/</button>
+                    <button onclick="showContent('')">Módulo</button>
+                    <button onclick="showContent('')">Potência</button>
+                    <button onclick="showContent('')">Raiz quadrada</button>
+                    <button onclick="showContent('')">Abs</button>
+                    <button onclick="showContent('')">Sinal</button>
+                    <button onclick="showContent('')">Minimo</button>
+                    <button onclick="showContent('')">Maximo</button>
+                    <button onclick="showContent('')">Clamp</button>
+                </div>
+            </div>
+
+            <div class="topic">
+                <header onclick="toogleContent('op-tri')"><span>&#9654;</span> Trigonometricas</header>
+                <div id ="op-tri" class="buttons hide">
+                    <button onclick="showContent('seno')">Seno</button>
+                    <button onclick="showContent('aseno')">ASeno</button>
+                    <button onclick="showContent('cosseno')">Cosseno</button>
+                    <button onclick="showContent('acosseno')">ACosseno</button>
+                    <button onclick="showContent('tangente')">Tangente</button>
+                    <button onclick="showContent('atangente')">ATangente</button>
+                    <button onclick="showContent('radians')">Radians</button>
+                    <button onclick="showContent('degrees')">Degrees</button>
+                </div>
+            </div>
+
+            <div class="topic">
+                <header onclick="toogleContent('op-exp')"><span>&#9654;</span> Exponenciais/Logs</header>
+                <div id ="op-exp" class="buttons hide">
+                    <button onclick="showContent('exp')">Exp</button>
+                    <button onclick="showContent('aseno')">Log</button>
+                    <button onclick="showContent('cosseno')">Exp2</button>
+                    <button onclick="showContent('acosseno')">Log2</button>
+                    <button onclick="showContent('tangente')">inversesqrt</button>
+                </div>
+            </div>
+
+            <div class="topic">
+                <!-- <header>Inerpolação</header> -->
+                <header onclick="toogleContent('op-int')"><span>&#9654;</span> Inerpolação Suavização</header>
+                <div id ="op-int" class="buttons hide">
+                    <button onclick="showContent('')">Mix</button>
+                    <button onclick="showContent('')">Step</button>
+                    <button onclick="showContent('')">Smooth</button>
+                    <button onclick="showContent('')">Smoothstep</button>
+                    <button onclick="showContent('')">fract</button>
+                    <button onclick="showContent('')">floor</button>
+                    <button onclick="showContent('')">ceil</button>
+                </div>
+            </div>
+
+            <div class="topic">
+                <header onclick="toogleContent('op-vet')"><span>&#9654;</span> Vetores</header>
+                <div id ="op-vet" class="buttons hide">
+                    <hr>
+                    <button onclick="showContent('')">Dot</button>
+                    <button onclick="showContent('')">Cross</button>
+                    <button onclick="showContent('')">Length</button>
+                    <button onclick="showContent('')">normalize</button>
+                    <button onclick="showContent('')">distance</button>
+                    <button onclick="showContent('')">reflect</button>
+                    <button onclick="showContent('')">refract</button>
+                </div>
+            </div>
+
+            <div class="topic">
+                <header onclick="toogleContent('op-geo')"><span>&#9654;</span> Geométricas Uteis</header>
+                <div id ="op-geo" class="buttons hide">
+                    <hr>
+                    <button onclick="showContent('')">feceforward</button>
+                    <button onclick="showContent('')">fwidth</button>
+                    <header>Derivadas parciais</header>
+                    <button onclick="showContent('')">dFdx</button>
+                    <button onclick="showContent('')">dFdy</button>
+                </div>
+            </div>
+        </div>
+
+        <div id ="code" class ="item">
+            <div id ="result">
+                <header>Saida Gl</header>
+                <canvas id ="canvas-glsl"></canvas>
+            </div>
+            <div id ="workspace" class ="tab-content" >
+                <!-- <div id ="code-workspace"  class ="tab-content" style ="display: none;"></div> -->
+                <svg fill ="none" stroke="#00ff00">
+                    <path d="M 50 100 C 150 100, 200 100, 230 130" stroke="yellow" stroke-width="3" fill="none"/>
+                </svg>
+            </div>
+
+        </div>
+    </div>
+    
+</body>
+<script> // Classes, Objetos, Listas
+    NodeList =[];
+
+    Mouse ={
+        //position: {x: 0, y: 0},
+        click: false,
+        nodeDrag: null,
+        nodeAnchor: {x: 0, y: 0}, 
+        clickPosition: {x: 0, y: 0},
+    };
+
+    window.onmousemove=(e)=>{
+        //Mouse.position ={x: e.clientX, y: e.clientY};
+        
+        if (Mouse.nodeDrag){
+            //console.log(Mouse.nodeDrag.style.left +": "+e.clientX +", "+e.offsetX);
+            Mouse.nodeDrag.style.left =(e.clientX -Mouse.nodeAnchor.x)+'px';
+            Mouse.nodeDrag.style.top =(e.clientY -Mouse.nodeAnchor.y)+'px';
+        }
+    };
+    window.onmousedown =(e)=>{
+        Mouse.click =true;
+        //console.log(e);
+        //if (e.target.tagName == 'NAV') 
+        //NodeList[0].setPos(30, 100, e.x, e.y);
+
+    }
+    window.onmouseup =(e)=>{
+        Mouse.click =false; 
+        Mouse.nodeDrag =null;
+        //
+    }
+    window.onmouseleave =()=>{Mouse.click =false; Mouse.nodeDrag =null;}
+
+
+    class Shader {
+        
+        constructor (){
+            this.vertex = {
+                source: `
+                    attribute vec4 position;
+                    void main (){gl_Position =position;}`, 
+                shader: null
+            }
+            this.fragment = {
+                source: `
+                    //precision highp float;
+                    precision mediump float;
+                    uniform float uTime;
+
+                    void main (){gl_FragColor =vec4(0.0,0.1,0.1,1.0);}`, 
+                shader: null,
+                setSource: function (col){
+                    this.source ="precision mediump float; \n"
+                    +"uniform float uTime; \n" 
+                    +"void main (){\n"
+                    +"  gl_FragColor =vec4("+col+",1.0); \n" 
+                    +"}";
+                }
+            }
+        }
+    }
+    class NodeUI {
+        constructor (type, inputs, outputs){
+            let node =document.createElement('div');
+            this.header =document.createElement('header');
+            this.body =document.createElement('div');
+            this.cnv =document.createElement('canvas');
+            let leftConn =document.createElement('div');
+            let rightConn =document.createElement('div');
+            for (let i = 0; i < inputs.length; i++){
+                let newConn =document.createElement('nav');
+                newConn.innerText =inputs[i];
+                leftConn.appendChild(newConn);
+            }
+            for (let i = 0; i < outputs.length; i++){
+                let newConn =document.createElement('nav');
+                newConn.innerText =outputs[i];
+                rightConn.appendChild(newConn);
+            }
+
+            node.className ="node";
+            this.header.innerText =type;
+            this.body.className ="body";
+            leftConn.className ="inputs";
+            leftConn.style.translate ="-20px 0";
+            rightConn.className ="outputs";
+            rightConn.style.translate ="102px 0";
+
+            this.body.appendChild(leftConn);
+            this.body.appendChild(this.cnv);
+            this.body.appendChild(rightConn);
+            node.appendChild(this.header);
+            node.appendChild(this.body);
+            document.querySelector('#workspace').appendChild(node);
+
+            this.header.addEventListener('mousedown',(e)=>{
+                Mouse.nodeDrag =node;
+                Mouse.nodeAnchor ={x: e.offsetX +2, y: e.offsetY};
+
+                //header.innerText =e.offsetX+'px';
+                //console.log(Mouse);
+            });
+        }
+    }
+    class Node {
+        constructor (type){
+            let newNodeUI =new NodeUI(type, ["x", "y"],["vec3"])
+            this.element =newNodeUI.cnv;
+            this.inputs =[0.0, 0.0];
+            this.outputs =[0.0];
+        }
+        setPos (x1,y1,x2,y2){
+            let elm =document.querySelectorAll('svg path')[0];
+            if (x1-x2 > 0) elm.setAttribute('d', this.IO_DoubleArc_Line (elm, x1, y1, x2, y2));
+            else elm .setAttribute('d', this.IO_Curve_Line (elm, x1, y1, x2, y2, 1.5));
+            return this;
+        }
+        //Set the position of the curve with the control points at an even position on the x pos
+        IO_Curve_Line (elm,x1,y1,x2,y2,scale){
+            var d = Math.abs(x1-x2) / scale,	//Delta X times scale factor 9
+            str = "M" + x1	+ "," + y1 + " C" +	//MoveTo
+                (x1 + d)	+ "," + y1 + " " +	//First Control Point
+                (x2 - d)	+ "," + y2 + " " +	//Second Control Point
+                x2			+ "," + y2;			//End Point
+            return str;
+        }
+
+        //Create a line when IOs are pointing away from each other which creates two arcs
+        IO_DoubleArc_Line (elm,x1,y1,x2,y2){
+            var dy =(y2-y1),						// Y Distance
+                c =Math.abs(Math.floor(dy / 3)),	// Third of distance works well to create half circle curve
+                my =(dy * 0.5) + y1;				// Mid Y point to draw straight line
+
+            var str = "M " +x1 +", " +y1 +" C " //MoveTo
+                +(x1 +c) +", " +y1 +" "		//First Control Point
+                +(x1 +c)	+", " +my +" " 	//Second Control Point
+                +x1	+", " +my +" C "    	//End Point --- Create First Arc
+
+                +x1 +", " +my +" "	//Create straight line in middle
+                +x2 +", " +my +" "
+                +x2 +", " +my +" C"
+
+                +(x2 -c) +", " +my +" "	//Create Final arc
+                +(x2 -c) +", " +y2 +" "
+                +x2 +", " +y2 +" ";
+
+            return str;
+        }
+    }
+</script>
+<script> // UX
+    
+    // Menu: 
+    function toogleContent(id){ 
+        let e =document.getElementById(id);
+        let current =e.classList[1];
+        let newState =(current == "hide") ? "seek" : "hide";
+        let newIcon =(current == "hide") ? '&#9660;' : "&#9654;";
+        //console.log((current == "hide"));
+
+        e.classList.remove(current);
+        e.classList.add(newState);
+
+        e.previousElementSibling.children[0].innerHTML =newIcon;
+        // Esconde todos 
+        //document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none"); 
+        // Mostra apenas o escolhido 
+        //document.getElementById(id).style.display = "block"; 
+    }
+
+
+    //createNode(1, 300, 400, "Node 01"); 
+    
+    //NOVO:
+    function connectNodes(nodeA, nodeB) { 
+        const svg = document.getElementById("connections");
+        
+        // pega posição absoluta dos conectores 
+        const rectA = nodeA.querySelector(".connector").getBoundingClientRect(); 
+        const rectB = nodeB.querySelector(".connector").getBoundingClientRect(); 
+
+        // ajusta para coordenadas relativas ao workspace 
+        const workspaceRect = svg.getBoundingClientRect(); 
+        const x1 = rectA.left + rectA.width/2 - workspaceRect.left; 
+        const y1 = rectA.top + rectA.height/2 - workspaceRect.top; 
+        const x2 = rectB.left + rectB.width/2 - workspaceRect.left; 
+        const y2 = rectB.top + rectB.height/2 - workspaceRect.top; 
+        
+        // cria path com curva suave 
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path"); 
+        path.setAttribute("d", `M ${x1} ${y1} C ${(x1+x2)/2} ${y1}, ${(x1+x2)/2} ${y2}, ${x2} ${y2}`); 
+        path.setAttribute("stroke", "black"); 
+        path.setAttribute("fill", "none"); 
+        svg.appendChild(path); 
+    }
+
+    function createNode(label){ 
+        // let node =document.createElement("div");
+        // let header =document.createElement("header");
+        // let _cnv =document.createElement('canvas');
+        // let nav =document.createElement('nav');
+        // let body =document.createElement('div');
+
+        NodeList.push(new Node (label));
+        //node.className = "node"; 
+        //node.style.left = x + "px"; 
+        //node.style.top = y + "px"; 
+        //node.setAttribute("data-id", id);
+        
+        //body.className ="body";
+        //body.style.display ='row';
+        //body.style.display ='flex';
+        //body.style.flexDirection ='column';
+        //node.appendChild(body);
+        //header.innerText =label;
+        //body.appendChild(header);
+        //node.insertAdjacentHTML('afterbegin', `<canvas></canvas>`);
+        //node.appendChild(nav);
+        //body.appendChild(_cnv);
+        
+        
+        
+    //     return node; 
+    } 
+
+
+    //const menu =document.createElement('div');
+    //menu.id ="menu";
+    //document.body.appendChild(menu);
+    //document.body.insertAdjacentHTML('beforeend','');
+
+    //createNode(1, 300, 400, "Node 01"); 
+
+
+</script>
+<script> // WebGL setup 
+    
+    const canvas = document.getElementById('canvas-glsl');
+    const gl = canvas.getContext('webgl');
+    let program =null;
+
+    function getShader (_gl, type, src){ 
+        let shader; 
+        
+        if (type == "fragment"){ 
+            shader = _gl.createShader(_gl.FRAGMENT_SHADER); 
+        } 
+        else if (type == "vertex"){ 
+            shader = _gl.createShader(_gl.VERTEX_SHADER); 
+        } 
+
+        gl.shaderSource(shader, src); 
+        gl.compileShader(shader); 
+        
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){ 
+            alert("Erro no shader: " + gl.getShaderInfoLog(shader)); 
+            return null; 
+        } 
+
+        return shader; 
+    }
+    
+    const vertShader = {
+        source: `
+            attribute vec4 position;
+            void main (){gl_Position =position;}`, 
+        shader: null
+    }
+    const fragShader = {
+        
+        source: `
+            //precision highp float;
+            precision mediump float;
+            uniform float uTime;
+
+            void main (){gl_FragColor =vec4(0.0,0.1,0.1,1.0);}`, 
+        shader: null,
+        setSource: function (col){
+            this.source ="precision mediump float; \n"
+            +"uniform float uTime; \n" 
+            +"void main (){\n"
+            +"  gl_FragColor =vec4("+col+",1.0); \n" 
+            +"}";
+        }
+    }
+    
+    function NewProgram (_gl, vertexSource, fragmentSource){
+        const vs = vertShader.shader = getShader(_gl, "vertex", vertexSource); 
+        const fs = fragShader.shader = getShader(_gl, "fragment", fragmentSource); 
+        const newProgram = _gl.createProgram(); 
+        
+        _gl.attachShader(newProgram, vs); 
+        _gl.attachShader(newProgram, fs); 
+        _gl.linkProgram(newProgram); 
+
+        if (!_gl.getProgramParameter(newProgram, _gl.LINK_STATUS)) { 
+            alert('Erro ao linkar programa:', _gl.getProgramInfoLog(newProgram)); 
+            _gl.deleteProgram (newProgram);
+            return null; 
+        } 
+
+        // desanexar e deletar shaders (já estão dentro do programa) 
+        _gl.detachShader(newProgram, vs); 
+        _gl.detachShader(newProgram, fs); 
+        _gl.deleteShader(vs); 
+        _gl.deleteShader(fs);
+
+        return newProgram;
+    }
+
+    function UpdateAtributes (){
+        const position = gl.getAttribLocation(program, "position");
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            -1, -1, 1, -1, -1, 1,
+            -1, 1, 1, -1, 1, 1
+        ]), gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(position);
+        gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    function UpdateUniforms (){
+        const u_time = gl.getUniformLocation(program, "uTime");
+
+        gl.uniform1f(u_time, 0.0);
+        
+    }
+
+    //fragShader.setSource('0.5,0.1,1.0')
+    
+    // pos atualizacao de codigo
+    function UpdateWebGl (){
+        if (program){ 
+            gl.deleteProgram(program); // limpa o antigo 
+        }
+
+        program = NewProgram (gl, vertShader.source, fragShader.source);
+        gl.useProgram(program);
+        UpdateAtributes ();
+        UpdateUniforms ();
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+
+    //fragShader.setSource('1.0,0.5,0.25');
+    //UpdateWebGl ();
+
+</script>
+</html>
+
+<!-- 
+
+<svg height="400" width="450" xmlns="http://www.w3.org/2000/svg">
+
+Draw the paths
+<path id="lineAB" d="M 100 350 l 150 -300" stroke="red" stroke-width="4"/>
+<path id="lineBC" d="M 250 50 l 150 300" stroke="red" stroke-width="4"/>
+<path id="lineMID" d="M 175 200 l 150 0" stroke="green" stroke-width="4"/>
+<path id="lineAC" d="M 100 350 q 150 -300 300 0" stroke="blue" stroke-width="4" fill="none"/>
+
+Mark relevant points
+<g stroke="black" stroke-width="3" fill="black">
+<circle id="pointA" cx="100" cy="350" r="4" />
+<circle id="pointB" cx="250" cy="50" r="4" />
+<circle id="pointC" cx="400" cy="350" r="4" />
+</g>
+
+Label the points
+<g font-size="30" font-family="sans-serif" fill="green" text-anchor="middle">
+<text x="100" y="350" dx="-30">A</text>
+<text x="250" y="50" dy="-10">B</text>
+<text x="400" y="350" dx="30">C</text>
+</g>
+
+</svg>
+
+"M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+"M 10 80 Q 52.5 10, 95 80 T 180 80"
+
+-->

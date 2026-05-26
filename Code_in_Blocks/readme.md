@@ -1,6 +1,6 @@
 ## Vertex Shader
 
-```javascript
+```html
 <script id="vertexShader" type="x-shader/x-vertex">
 ```
 
@@ -9,6 +9,8 @@
 - 
 
 ```cpp
+
+
     gl_Position  = vec4(0.0, 0.0, 0.0, 1.0); // Posição final do vértice
 ```
 
@@ -19,7 +21,10 @@
 - Ele é responsável por pintar, iluminar e texturizar a superfície. 
 
 ```cpp
+
+void main (){
     gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+} 
 ```
 
 ## Estrutura Básica do GLSL (Sintaxe)

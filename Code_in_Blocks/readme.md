@@ -30,7 +30,9 @@ void main(void) {
 ```cpp
 
 void main (){
-    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    vec2 uv =gl_FragCoord;
+
+    gl_FragColor = vec4(uv, 0.0, 1.0);
 } 
 ```
 

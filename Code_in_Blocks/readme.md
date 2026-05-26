@@ -9,12 +9,19 @@
 - 
 
 ```cpp
+attribute vec4 position; 
 
+void main(void) {
 
-    gl_Position  = vec4(0.0, 0.0, 0.0, 1.0); // Posição final do vértice
+    gl_Position = position; // Posição final do vértice
+}
 ```
 
 ## Fragment Shader (ou Pixel Shader)
+
+```html
+<script id="shader-fs" type="x-shader/x-fragment">
+```
 
 - O _Fragment Shader_ executa para cada pixel individual coberto por um objeto na tela. 
 

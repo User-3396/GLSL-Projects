@@ -1,0 +1,26 @@
+html,body {
+    padding: 0px;
+    margin: 0px;
+}
+body {
+    background-color: black;
+}
+
+div {
+    background-color: rgb(24, 24, 24);
+    border: solid 2px rgb(0, 255, 225);
+}
+
+#editor{
+    
+}
+
+#node {
+    position: absolute;
+    top: 30px; left: 30px;
+    
+}
+
+canvas{
+    background-color: rgb(24, 24, 24);
+}

@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Document</title>
 </head>
 <style>
-    html,body{
-        padding: 0px;
-        margin: 0px;
-    }
-    body{
-        background-color: black;
-    }
-    canvas{
-        background-color: rgb(24, 24, 24);
-    }
+    
 </style>
 <body>
-    <canvas id ="webgl-canvas"></canvas>
+    <div id="editor">
+        <div id ="node">
+            <canvas id="canvas-webgl"></canvas>
+        </div>
+
+
+
+    </div>
 </body>
 <script>
     const cnv =document.getElementById('webgl-canvas');
     const ctx =cnv.getContext('webgl');
+
 
 
     

@@ -13,22 +13,30 @@
         </div> -->
 
 
-
     </div>
+    <p id ="log">29m34029</p>
 </body>
 <script src ="classes.js"></script>
-<script>
+<script> // Main
     //const cnv =document.getElementById('canvas-webgl');
     //const ctx =cnv.getContext('webgl');
 
-    var nodes =[new Node()];
+    var nodes =[new Node("Frag_color 2", 100, 40), new Node("Frag_color", 50, 100)];
+
+    
+    
+    
+    
+
+
 
     function Loop (){
+
         for (let i = 0; i < nodes.length; i++) nodes[i].Update ();
+
         requestAnimationFrame(Loop);
     }
 
-    Loop();
-    
+    //Loop();
 </script>
 </html>

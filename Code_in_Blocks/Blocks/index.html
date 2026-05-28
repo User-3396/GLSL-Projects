@@ -18,16 +18,72 @@
 </body>
 <script src ="classes.js"></script>
 <script> // Main
-    //const cnv =document.getElementById('canvas-webgl');
-    //const ctx =cnv.getContext('webgl');
+    var nodes =[new Node("Frag_color 2", 50, 40), new Node("Frag_color", 300, 200)];
+    
+    const cnv =nodes[0].cnv;
+    const glCtx =cnv.getContext('webgl');
+    var program =null;
 
-    var nodes =[new Node("Frag_color 2", 100, 40), new Node("Frag_color", 50, 100)];
+    function getShader (_gl, type, src){ 
+        let shader; 
+        
+        if (type == "fragment"){ 
+            shader = _gl.createShader(_gl.FRAGMENT_SHADER); 
+        } 
+        else if (type == "vertex"){ 
+            shader = _gl.createShader(_gl.VERTEX_SHADER); 
+        } 
 
-    
-    
-    
-    
+        gl.shaderSource(shader, src); 
+        gl.compileShader(shader); 
+        
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){ 
+            alert("Erro no shader: " + gl.getShaderInfoLog(shader)); 
+            return null; 
+        } 
 
+        return shader; 
+    }
+
+    function NewProgram (_gl, vertexSource, fragmentSource){
+        const vs = vertShader.shader = getShader(_gl, "vertex", vertexSource); 
+        const fs = fragShader.shader = getShader(_gl, "fragment", fragmentSource); 
+        const newProgram = _gl.createProgram(); 
+        
+        _gl.attachShader(newProgram, vs); 
+        _gl.attachShader(newProgram, fs); 
+        _gl.linkProgram(newProgram); 
+
+        if (!_gl.getProgramParameter(newProgram, _gl.LINK_STATUS)) { 
+            alert('Erro ao linkar programa:', _gl.getProgramInfoLog(newProgram)); 
+            _gl.deleteProgram (newProgram);
+            return null; 
+        } 
+
+        // desanexar e deletar shaders (já estão dentro do programa) 
+        _gl.detachShader(newProgram, vs); 
+        _gl.detachShader(newProgram, fs); 
+        _gl.deleteShader(vs); 
+        _gl.deleteShader(fs);
+
+        return newProgram;
+    }
+    
+    
+    
+    
+    // pos atualizacao de codigo
+    function UpdateWebGl (){
+        if (program){ 
+            gl.deleteProgram(program); // limpa o antigo 
+        }
+
+        program = NewProgram (gl, vertShader.source, fragShader.source);
+        gl.useProgram(program);
+        UpdateAtributes ();
+        UpdateUniforms ();
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
 
 
     function Loop (){

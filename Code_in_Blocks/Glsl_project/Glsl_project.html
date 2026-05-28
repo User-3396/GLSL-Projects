@@ -569,11 +569,11 @@
             shader = _gl.createShader(_gl.VERTEX_SHADER); 
         } 
 
-        gl.shaderSource(shader, src); 
-        gl.compileShader(shader); 
+        _gl.shaderSource(shader, src); 
+        _gl.compileShader(shader); 
         
-        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){ 
-            alert("Erro no shader: " + gl.getShaderInfoLog(shader)); 
+        if (!_gl.getShaderParameter(shader, _gl.COMPILE_STATUS)){ 
+            alert("Erro no shader: " + _gl.getShaderInfoLog(shader)); 
             return null; 
         } 
 

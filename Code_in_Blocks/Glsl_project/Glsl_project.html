@@ -587,7 +587,6 @@
         shader: null
     }
     const fragShader = {
-        
         source: `
             //precision highp float;
             precision mediump float;
@@ -601,7 +600,7 @@
             +"void main (){\n"
             +"  gl_FragColor =vec4("+col+",1.0); \n" 
             +"}";
-        }
+        }, 
     }
     
     function NewProgram (_gl, vertexSource, fragmentSource){

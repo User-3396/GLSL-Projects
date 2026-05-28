@@ -23,6 +23,42 @@
     const cnv =nodes[0].cnv;
     const glCtx =cnv.getContext('webgl');
     var program =null;
+    const vertShader = {
+        source: `
+            attribute vec4 position;
+            void main (){gl_Position =position;}`, 
+        shader: null
+    }
+    const fragShader = {
+        functions: [],
+        source: `
+            //precision highp float;
+            precision mediump float;
+            uniform float uTime;
+
+            void main (){gl_FragColor =vec4(0.0,0.1,0.1,1.0);}`, 
+        shader: null,
+        setSource: function (col){
+            this.source ="precision mediump float; \n"
+            +"uniform float uTime; \n" 
+            +"void main (){\n"
+            +"  gl_FragColor =vec4("+col+",1.0); \n" 
+            +"}";
+        }, 
+
+        compile: function (){
+            
+            for (let i =0; i < this.functions.length; i++){
+
+            }
+            
+            this.source ="precision mediump float; \n"
+            +"void main (){\n"
+            
+            +"  gl_FragColor =vec4("+col+",1.0); \n" 
+            +"}";
+        }
+    }
 
     function getShader (_gl, type, src){ 
         let shader; 
@@ -74,12 +110,12 @@
     
     // pos atualizacao de codigo
     function UpdateWebGl (){
-        if (program){ 
+        if (program){
             gl.deleteProgram(program); // limpa o antigo 
         }
 
         program = NewProgram (gl, vertShader.source, fragShader.source);
-        gl.useProgram(program);
+        gl.useProgram(program); 
         UpdateAtributes ();
         UpdateUniforms ();
         gl.drawArrays(gl.TRIANGLES, 0, 6);

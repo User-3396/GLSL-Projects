@@ -1,3 +1,5 @@
+### Node-based Editor (for GLSL)
+
 ### SVG (Scalable Vector Graphics)
 
 `<svg>`: A tag principal que delimita a área de desenho. Ela define o "espaço de trabalho".
@@ -12,23 +14,25 @@
 É a tag usada para fazer os fios (wires) que conectam os componentes.
 Atributo principal: `d` (dados do caminho). Ele usa comandos como `M` (mover para), `L` (linha até), e `H`/`V` (linhas horizontais/verticais rápidas).
 
-## Exemplo Visual de Sintaxe
+# Exemplo Visual de Sintaxe
 
 Veja como essas tags conversam entre si na prática:
 
+__index.html:__
+
 ```html
 <svg width="200" height="200">
-<!-- Um quadrado com cantos arredondados (Chip) -->
-<rect x="20" y="20" width="100" height="100" rx="10" fill="#333" stroke="#555" stroke-width="3" />
+    <!-- Um quadrado com cantos arredondados (Chip) -->
+    <rect x="20" y="20" width="100" height="100" rx="10" fill="#333" stroke="#555" stroke-width="3" />
 
-<!-- Um pino de conexão (Círculo) -->
-<circle cx="20" cy="70" r="8" fill="#ffcc00" />
+    <!-- Um pino de conexão (Círculo) -->
+    <circle cx="20" cy="70" r="8" fill="#ffcc00" />
 
-<!-- Um fio que sai do pino (Caminho) -->
-<!-- M 20 70 (Começa no centro do círculo) L 0 70 (Desenha linha para a esquerda) -->
-<path d="M 20 70 L 0 70" stroke="#ffcc00" stroke-width="4" fill="none" />
+    <!-- Um fio que sai do pino (Caminho) -->
+    <!-- M 20 70 (Começa no centro do círculo) L 0 70 (Desenha linha para a esquerda) -->
+    <path d="M 20 70 L 0 70" stroke="#ffcc00" stroke-width="4" fill="none" />
 
-<!-- Texto identificador -->
-<text x="70" y="75" fill="white" font-family="sans-serif" text-anchor="middle">IC 1</text>
+    <!-- Texto identificador -->
+    <text x="70" y="75" fill="white" font-family="sans-serif" text-anchor="middle">IC 1</text>
 </svg>
 ```

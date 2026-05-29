@@ -102,3 +102,37 @@ class Node {
 
 }
 
+class SVGNode {
+    _NS ="http://w3.org"; // Namespace do SVG
+    constructor (id, name, x, y, inputs, outputs){
+        this.grupo = document.createElementNS(this._NS, "g");
+        grupo.setAttribute("id", id);
+        // Posiciona o bloco no mapa usando transform
+        grupo.setAttribute("transform", `translate(${x}, ${y})`);
+        grupo.setAttribute("class", "node");
+
+        // 2. Cria o retângulo de fundo do bloco
+        const retangulo = document.createElementNS(SVG_NS, "rect");
+        retangulo.setAttribute("width", "140");
+        retangulo.setAttribute("height", "180");
+        retangulo.setAttribute("rx", "8");
+        retangulo.setAttribute("fill", "#252529");
+        retangulo.setAttribute("stroke", "#4f46e5");
+        retangulo.setAttribute("stroke-width", "2");
+
+        // 3. Cria o texto com o nome do comando (ex: 'cos', 'sin')
+        const texto = document.createElementNS(SVG_NS, name);
+        texto.setAttribute("x", "70");
+        texto.setAttribute("y", "25");
+        texto.setAttribute("fill", "#ffffff");
+        texto.setAttribute("text-anchor", "middle");
+        texto.setAttribute("font-family", "sans-serif");
+        texto.setAttribute("font-weight", "bold");
+        texto.textContent = comando.toUpperCase();
+
+        // 4. Monta a estrutura inserindo os filhos no grupo <g>
+        grupo.appendChild(retangulo);
+        grupo.appendChild(texto);
+    }
+
+}

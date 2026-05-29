@@ -21,7 +21,12 @@ div {
 
 }
 
-canvas {
+#webgl-output{
+    background-color: rgb(37, 30, 21);
+    border: solid 2px rgb(255,185,0);
+}
+
+.canvas-webgl {
     width: 180px; height: 130px;
     background-color: rgb(73, 73, 73);
 }
@@ -39,3 +44,4 @@ canvas {
     color: white;
     font-size: 21px;
 }
+

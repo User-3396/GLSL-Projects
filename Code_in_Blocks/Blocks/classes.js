@@ -16,6 +16,7 @@ window.onmousemove=(e)=>{
         Mouse.nodeDrag.style.top =(e.clientY -Mouse.nodeAnchor.y)+'px';
         Log.SetText ("[Node:" +Mouse.nodeDrag.name +"] px: " +e.clientX +", py: " +e.clientY);
     }
+    
 }
 
 window.onmousedown =(e)=>{
@@ -34,6 +35,7 @@ window.onmouseup =(e)=>{
 
 window.onmouseleave =()=>{Mouse.click =false; Mouse.nodeDrag =null;}
 
+// 
 Log ={
     element: document.getElementById("log"), 
     SetText: (txt)=>{
@@ -41,7 +43,7 @@ Log ={
     }
 }
 
-
+// 
 class Node {
     constructor (name, x, y){
         this.name =name;
@@ -49,7 +51,7 @@ class Node {
         this.mouseOffset ={x: 0, y: 0};
         this.drag =false;
         this.cnv =document.createElement("canvas");
-        this.cnv.id ="canvas-webgl";
+        this.cnv.className ="canvas-webgl";
         this.element =document.createElement("div");
         this.element.className ="draggable";
         this.element.style.left =x+"px";
@@ -95,7 +97,7 @@ class Node {
     }
 
     Update=()=>{
-
+    
     }
 
 }

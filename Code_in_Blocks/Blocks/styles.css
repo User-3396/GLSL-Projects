@@ -45,3 +45,30 @@ div {
     font-size: 21px;
 }
 
+svg {
+    width: 100vw;
+    height: 100vh;
+    cursor: grab;
+}
+svg:active {
+    cursor: grabbing;
+}
+/* Estilização direta dos componentes via CSS */
+.component {
+    cursor: pointer;
+    transition: stroke 0.2s;
+}
+.component:hover {
+    stroke: #ffffff;
+    stroke-width: 2px;
+}
+#info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    pointer-events: none;
+}

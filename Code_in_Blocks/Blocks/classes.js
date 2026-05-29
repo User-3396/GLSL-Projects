@@ -16,7 +16,7 @@ window.onmousemove=(e)=>{
         Mouse.nodeDrag.style.top =(e.clientY -Mouse.nodeAnchor.y)+'px';
         Log.SetText ("[Node:" +Mouse.nodeDrag.name +"] px: " +e.clientX +", py: " +e.clientY);
     }
-    
+
 }
 
 window.onmousedown =(e)=>{
@@ -39,7 +39,7 @@ window.onmouseleave =()=>{Mouse.click =false; Mouse.nodeDrag =null;}
 Log ={
     element: document.getElementById("log"), 
     SetText: (txt)=>{
-        console.log(this.element);
+        //console.log(Log.element);
     }
 }
 

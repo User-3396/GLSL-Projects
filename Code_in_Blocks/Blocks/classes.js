@@ -16,7 +16,6 @@ window.onmousemove=(e)=>{
         Mouse.nodeDrag.style.top =(e.clientY -Mouse.nodeAnchor.y)+'px';
         Log.SetText ("[Node:" +Mouse.nodeDrag.name +"] px: " +e.clientX +", py: " +e.clientY);
     }
-
 }
 
 window.onmousedown =(e)=>{
@@ -119,6 +118,7 @@ class SVGNode {
         retangulo.setAttribute("fill", "#252529");
         retangulo.setAttribute("stroke", "#4f46e5");
         retangulo.setAttribute("stroke-width", "2");
+
 
         // 3. Cria o texto com o nome do comando (ex: 'cos', 'sin')
         const texto = document.createElementNS(SVG_NS, name);

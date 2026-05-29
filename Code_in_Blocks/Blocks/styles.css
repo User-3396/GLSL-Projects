@@ -22,14 +22,15 @@ div {
 }
 
 #webgl-output{
+    width: 100px; height: 100px;
     background-color: rgb(37, 30, 21);
-    border: solid 2px rgb(255,185,0);
+    border: solid 1px rgb(255,185,0);
 }
 
-.canvas-webgl {
-    width: 180px; height: 130px;
+/* .canvas-webgl {
+    width: 100px; height: 100px;
     background-color: rgb(73, 73, 73);
-}
+} */
 
 .draggable {
     position: absolute;
@@ -56,11 +57,12 @@ svg:active {
 /* Estilização direta dos componentes via CSS */
 .component {
     cursor: pointer;
-    transition: stroke 0.2s;
+    transition: stroke 2s;
 }
 .component:hover {
     stroke: #ffffff;
     stroke-width: 2px;
+    transition: stroke 2s;
 }
 #info {
     position: absolute;
